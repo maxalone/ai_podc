@@ -1,7 +1,9 @@
 from agents.orchestrator import Orchestrator
 
 if __name__ == "__main__":
-    topic = input("Inserisci il tema del podcast: ")
+    # Invece di input(), usa un valore fisso
+    topic = "Intelligenza Artificiale e Futuro del Lavoro"
+    
     orchestrator = Orchestrator()
     result = orchestrator.run(topic)
 
