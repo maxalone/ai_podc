@@ -16,14 +16,13 @@ jobs:
       with:
         python-version: '3.9'
     
-    - name: Create .env file from GitHub Secrets
+    - name: Create .env file
       run: |
         cat > .env << EOF
         RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }}
         HF_TOKEN=${{ secrets.HF_TOKEN }}
         HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}
         REPO_NAME=${GITHUB_REPOSITORY#*/}
-        DEPLOY_ENV=production
         EOF
 
     - name: Install dependencies
