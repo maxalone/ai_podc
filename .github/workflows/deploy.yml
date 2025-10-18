@@ -7,22 +7,29 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
+    env:
+      REPO_NAME: ${{ github.event.repository.name }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+
     steps:
-    - uses: actions/checkout@v3
-    
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
-    
+
     - name: Create .env file
       run: |
         cat > .env << EOF
-        RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }}
-        HF_TOKEN=${{ secrets.HF_TOKEN }}
-        HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}
-        REPO_NAME=${GITHUB_REPOSITORY#*/}
+        RAILWAY_TOKEN=${RAILWAY_TOKEN}
+        HF_TOKEN=${HF_TOKEN}
+        HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+        REPO_NAME=${REPO_NAME}
         EOF
 
     - name: Install dependencies
@@ -31,10 +38,12 @@ jobs:
         pip install huggingface_hub python-dotenv
 
     - name: Deploy to Railway
+      if: ${{ env.RAILWAY_TOKEN != '' }}
       uses: railway-org/action@v1
       with:
-        token: ${{ secrets.RAILWAY_TOKEN }}
+        token: ${{ env.RAILWAY_TOKEN }}
 
     - name: Deploy to Hugging Face
+      if: ${{ env.HF_TOKEN != '' || env.HUGGINGFACE_TOKEN != '' }}
       run: |
         python deploy_hf.py
