@@ -16,20 +16,36 @@ jobs:
       with:
         python-version: '3.9'
     
+    - name: Create .env file from GitHub Secrets
+      run: |
+        cat > .env << EOF
+        # GitHub Secrets
+        RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN || secrets.RAILWAY_TOKEN }}
+        HF_TOKEN=${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
+        HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN || secrets.HF_TOKEN }}
+        
+        # Altri environment variables
+        REPO_NAME=${GITHUB_REPOSITORY#*/}
+        DEPLOY_ENV=production
+        EOF
+
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-        pip install huggingface_hub
-    
-    # Deploy su Railway (se già configurato)
+        pip install huggingface_hub python-dotenv
+
+    # Deploy su Railway
     - name: Deploy to Railway
+      if: env.RAILWAY_TOKEN != ''
       uses: railway-org/action@v1
       with:
         token: ${{ secrets.RAILWAY_TOKEN }}
-    
+
     # Deploy su Hugging Face
     - name: Deploy to Hugging Face
+      if: env.HF_TOKEN != '' || env.HUGGINGFACE_TOKEN != ''
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
       run: |
         python deploy_hf.py
