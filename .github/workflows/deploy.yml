@@ -1,0 +1,35 @@
+name: Deploy to Railway and Hugging Face
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install huggingface_hub
+    
+    # Deploy su Railway (se già configurato)
+    - name: Deploy to Railway
+      uses: railway-org/action@v1
+      with:
+        token: ${{ secrets.RAILWAY_TOKEN }}
+    
+    # Deploy su Hugging Face
+    - name: Deploy to Hugging Face
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        python deploy_hf.py
