@@ -20,13 +20,13 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install huggingface_hub
-    
+
     # Deploy su Railway (se già configurato)
     - name: Deploy to Railway
       uses: railway-org/action@v1
       with:
         token: ${{ secrets.RAILWAY_TOKEN }}
-    
+
     # Deploy su Hugging Face
     - name: Deploy to Hugging Face
       env:
