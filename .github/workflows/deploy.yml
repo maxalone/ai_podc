@@ -31,12 +31,10 @@ jobs:
         pip install huggingface_hub python-dotenv
 
     - name: Deploy to Railway
-      if: secrets.RAILWAY_TOKEN != ''
       uses: railway-org/action@v1
       with:
         token: ${{ secrets.RAILWAY_TOKEN }}
 
     - name: Deploy to Hugging Face
-      if: secrets.HF_TOKEN != '' || secrets.HUGGINGFACE_TOKEN != ''
       run: |
         python deploy_hf.py
