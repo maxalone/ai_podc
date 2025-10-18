@@ -11,3 +11,5 @@ if __name__ == "__main__":
     print(result["script"][:500], "...\n")
     print(result["posts"])
     print(f"\nAudio salvato in: {result['audio_path']}")
+
+    
