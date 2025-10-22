@@ -1,8 +1,14 @@
+from dotenv import load_dotenv
+import os
+
+# Carica le variabili d'ambiente dal file .env.local
+load_dotenv('.env.local')
+
 from agents.orchestrator import Orchestrator
 
 if __name__ == "__main__":
     # Invece di input(), usa un valore fisso
-    topic = "Intelligenza Artificiale e Futuro del Lavoro"
+    topic = "L'arte performativa contemporanea e il suo impatto sociale"
     
     orchestrator = Orchestrator()
     result = orchestrator.run(topic)
